@@ -8,7 +8,7 @@ public abstract class VaranoiClient {
     private PrintWriter out = null;
     private BufferedReader in = null;
     private Socket socket;
-    private String server, username;
+    String server, username;
     private int port;
 
     VaranoiClient(String server, int port, String username) {
@@ -27,15 +27,18 @@ public abstract class VaranoiClient {
         System.out.println("Connect accepted " + socket.getInetAddress() + ":" + socket.getPort());
         try {
             out = new PrintWriter(socket.getOutputStream(), true);
-            out.println(this.username);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException eIO) {
             System.out.println("Exception creating new Input/Output Streams: " + eIO);
             return false;
         }
+        System.out.println("Starting game");
         String command;
         try {
-            while ((command = in.readLine()) != null) {
+            char[] al = new char[20];
+            while (true) {
+                in.read(al);
+                command = new String(al).split("\0")[0];
                 out.println(process(command));
             }
         } catch (IOException eIO) {

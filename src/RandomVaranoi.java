@@ -15,8 +15,47 @@ public class RandomVaranoi extends VaranoiClient{
     // random strategy
     @Override
     public String process(String command) {
-        StringTokenizer tk = new StringTokenizer(command);
-        String player = tk.nextToken();
+        StringTokenizer tk = new StringTokenizer(command, "\n ");
+        String op = tk.nextToken();
+        if (op.equals("TEAM")) {
+            return super.username;
+        }
+        if (op.equals("MOVE")) {
+            int myx = rand.nextInt(grid.length);
+            int myy = rand.nextInt(grid.length);
+            grid[myx][myy] = 1;
+            return String.format("%d %d", myx, myy);
+        }
+        if (op.equals("RESTART")) {
+            op = tk.nextToken();
+            while (true) {
+                try {
+                    Integer.parseInt(op);
+                } catch(NumberFormatException e) {
+                    op = tk.nextToken();
+                } finally {
+                    break;
+                }
+            }
+            int myx, myy;
+            if (op.equals("MOVE")) {
+                grid = new int[grid.length][grid.length];
+                myx = rand.nextInt(grid.length);
+                myy = rand.nextInt(grid.length);
+                grid[myx][myy] = 1;
+                return String.format("%d %d", myx, myy);
+            } else {
+                int x = Integer.parseInt(op);
+                int y = Integer.parseInt(tk.nextToken());
+                grid[x][y] = 1;
+                do {
+                    myx = rand.nextInt(grid.length);
+                    myy = rand.nextInt(grid.length);
+                } while (grid[myx][myy] != 0);
+                grid[myx][myy] = 1;
+                return String.format("%d %d", myx, myy);
+            }
+        }
         int x = Integer.parseInt(tk.nextToken());
         int y = Integer.parseInt(tk.nextToken());
         grid[x][y] = 1;
